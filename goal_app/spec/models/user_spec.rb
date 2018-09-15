@@ -58,4 +58,20 @@ RSpec.describe User, type: :model do
     end
     
   end
+  
+  describe "#reset_session_token!" do
+    it 'should generate a new session token and assign it to the user' do
+      user = FactoryBot.create(:user,password: "245690", session_token: "abcde")
+      expect(user.reset_session_token!).not_to eq("abcde")
+    end
+    
+    it "saves the session token into the database and returns the token" do
+      user = FactoryBot.create(:user,password: "245690", session_token: "abcde")
+      session = user.reset_session_token!
+      user2 = User.find_by(username: "john")
+      expect(user2.session_token).to eq(session)
+    end
+    
+  end
+  
 end
